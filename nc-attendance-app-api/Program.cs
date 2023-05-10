@@ -1,4 +1,7 @@
 
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using nc_attendance_app_api.BusinessLayer;
 using nc_attendance_app_api.DAL;
 using nc_attendance_app_api.Interface;
@@ -10,12 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 
+
 services.AddLogging();
 
 builder.Services
     .AddScoped<IDataAccessService, DataAccessService>()
     .AddScoped<IUserService, UserService>()
-    .AddScoped<IUserBusinessLayer, UserBusinessLayer>();
+    .AddScoped<IUserBusinessLayer, UserBusinessLayer>()
+    .AddScoped<IScheduleService, ScheduleService>()
+    .AddScoped<IScheduleBusinessLayer, ScheduleBusinessLayer>()
+    .AddScoped<ISubjectBusinessLayer, SubjectBusinessLayer>()
+    .AddScoped<ISubjectService, SubjectService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,6 +49,7 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+
 
 
 // Configuration
@@ -70,3 +79,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

@@ -11,5 +11,6 @@ namespace nc_attendance_app_api.Interface
         Task UpsertUserDetailsAsync(User user);
 
         Task DeleteUserByUsernameAsync(string username);
+        Task<bool> ValidateMobileNumberAsync(string mobileNumber);
     }
 }

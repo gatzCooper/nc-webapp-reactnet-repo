@@ -1,6 +1,7 @@
 ﻿using nc_attendance_app_api.Interface;
 using nc_attendance_app_api.Models;
 using System.Collections;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text;
 
@@ -14,6 +15,7 @@ namespace nc_attendance_app_api.Services
         private const string SP_GET_USER_BY_USERNAME_AND_PASSWORD = "usp_GetUserInfoByUserNameAndPassword";
         private const string SP_UPSERT_USER_DETAILS = "usp_UpsertUserDetails";
         private const string SP_DELETE_USER_DETAILS = "usp_DeleteUserByUserName";
+        private const string SP_VALIDATE_MOBILE_NUMBER = "usp_ValidatePhoneNumber";
         public UserService(IDataAccessService dataAccessService)
         {
             _dataAccessService = dataAccessService;
@@ -22,15 +24,16 @@ namespace nc_attendance_app_api.Services
         public async Task<IList<User>> GetAllUserAsync()
         {
             var userList = new List<User>();
-            var user = new User();
+            
 
 
             try
             {
                 using (SqlDataReader sqlDataReader = (SqlDataReader)await _dataAccessService.ExecuteReaderAsync(SP_GET_ALL_USER))
                 {
-                    while (sqlDataReader.Read())
+                    while (await sqlDataReader.ReadAsync())
                     {
+                        var user = new User();
                         user.userNo = Convert.ToString(sqlDataReader["userNumber"]) ?? "";
                         user.role = Convert.ToString(sqlDataReader["JobTitle"]) ?? "";
                         user.employmentCode = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
@@ -43,6 +46,7 @@ namespace nc_attendance_app_api.Services
                         user.departmentName = Convert.ToString(sqlDataReader["departmentName"]) ?? "";
                         user.username = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         user.status = Convert.ToString(sqlDataReader["statusName"]) ?? "";
+                        user.hiredDate = sqlDataReader["hiredDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["hiredDate"]);
                         user.createdAt = sqlDataReader["createdAt"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["createdAt"]);
 
                         userList.Add(user);
@@ -71,7 +75,7 @@ namespace nc_attendance_app_api.Services
             {
                 using (SqlDataReader sqlDataReader = (SqlDataReader)await _dataAccessService.ExecuteReaderAsync(SP_GET_USER_BY_USERNAME, parameters))
                 {
-                    while (sqlDataReader.Read())
+                    while (await sqlDataReader.ReadAsync())
                     {
                         user.userNo = Convert.ToString(sqlDataReader["userNumber"]) ?? "";
                         user.role = Convert.ToString(sqlDataReader["JobTitle"]) ?? "";
@@ -85,6 +89,7 @@ namespace nc_attendance_app_api.Services
                         user.departmentName = Convert.ToString(sqlDataReader["departmentName"]) ?? "";
                         user.username = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         user.status = Convert.ToString(sqlDataReader["statusName"]) ?? "";
+                        user.hiredDate = sqlDataReader["hiredDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["hiredDate"]);
                         user.createdAt = sqlDataReader["createdAt"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["createdAt"]);
 
                     }
@@ -114,7 +119,7 @@ namespace nc_attendance_app_api.Services
             {
                 using (SqlDataReader sqlDataReader = (SqlDataReader)await _dataAccessService.ExecuteReaderAsync(SP_GET_USER_BY_USERNAME_AND_PASSWORD, parameters))
                 {
-                    while (sqlDataReader.Read())
+                    while (await sqlDataReader.ReadAsync())
                     {
                         user.userNo = Convert.ToString(sqlDataReader["userNumber"]) ?? "";
                         user.role = Convert.ToString(sqlDataReader["JobTitle"]) ?? "";
@@ -128,6 +133,7 @@ namespace nc_attendance_app_api.Services
                         user.departmentName = Convert.ToString(sqlDataReader["departmentName"]) ?? "";
                         user.username = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         user.status = Convert.ToString(sqlDataReader["statusName"]) ?? "";
+                        user.hiredDate = sqlDataReader["hiredDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["hiredDate"]);
                         user.createdAt = sqlDataReader["createdAt"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["createdAt"]);
 
                     }
@@ -161,7 +167,8 @@ namespace nc_attendance_app_api.Services
                 new SqlParameter("@password", base64StringPass),
                 new SqlParameter("@status", user.status),
                 new SqlParameter("@department", user.departmentName),
-                new SqlParameter("@address", user.address)
+                new SqlParameter("@address", user.address),
+                new SqlParameter("@hiredDate", user.hiredDate)
            };
 
             await _dataAccessService.ExecuteNonQueryAsync(SP_UPSERT_USER_DETAILS, parameters);
@@ -175,6 +182,25 @@ namespace nc_attendance_app_api.Services
             };
 
             await _dataAccessService.ExecuteNonQueryAsync(SP_DELETE_USER_DETAILS, parameters);
+        }
+
+        public async Task<bool> ValidateMobileNumberAsync(string mobileNumber)
+        {
+            bool isValid = false;
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@mobileNumber", mobileNumber),
+            };
+            using (SqlDataReader sqlDataReader = (SqlDataReader)await _dataAccessService.ExecuteReaderAsync(SP_VALIDATE_MOBILE_NUMBER, parameters))
+            {
+                while (await sqlDataReader.ReadAsync())
+                {
+                    isValid = Convert.ToBoolean(sqlDataReader["IsValid"]);
+
+                }          
+            }
+            return isValid;
+
         }
     }
 }

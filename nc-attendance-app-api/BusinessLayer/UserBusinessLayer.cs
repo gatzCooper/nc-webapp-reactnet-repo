@@ -11,9 +11,6 @@ namespace nc_attendance_app_api.BusinessLayer
     public class UserBusinessLayer : IUserBusinessLayer
     {
         private readonly IUserService _userService;
-        private const string _ApiKey = "6ad148b42faaff5fd6af0619b317e41b";
-        private const string _Url = "https://api.semaphore.co/api/v4/otp";
-
         public UserBusinessLayer(IUserService userService)
         {
             _userService = userService;
@@ -108,6 +105,11 @@ namespace nc_attendance_app_api.BusinessLayer
         public async Task DeleteUserByUsernameAsync(string username)
         {
             await _userService.DeleteUserByUsernameAsync(username);
+        }
+
+        public Task<bool> IsMobileNumberValid(string mobileNumber)
+        {
+            throw new NotImplementedException();
         }
     }
 }

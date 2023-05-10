@@ -75,5 +75,11 @@ namespace nc_attendance_app_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        //[HttpPost("forgotPassword")]
+        //public async Task<IActionResult> ForgotPasswordAsync(string phoneNumber)
+        //{
+
+        //}
     }
 }

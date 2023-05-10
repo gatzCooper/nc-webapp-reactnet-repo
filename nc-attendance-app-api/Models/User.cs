@@ -15,6 +15,7 @@
         public string username { get; set; }
         public string password { get; set; }
         public string status { get; set; }
+        public DateTime? hiredDate { get; set; }
         public DateTime? createdAt { get; set; }
     }
 }
