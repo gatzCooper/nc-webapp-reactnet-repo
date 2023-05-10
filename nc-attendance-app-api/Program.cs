@@ -23,7 +23,9 @@ builder.Services
     .AddScoped<IScheduleService, ScheduleService>()
     .AddScoped<IScheduleBusinessLayer, ScheduleBusinessLayer>()
     .AddScoped<ISubjectBusinessLayer, SubjectBusinessLayer>()
-    .AddScoped<ISubjectService, SubjectService>();
+    .AddScoped<ISubjectService, SubjectService>()
+    .AddScoped<IAttendanceBusinessLayer, AttendanceBusinessLayer>()
+    .AddScoped<IAttendanceService, AttendanceService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
