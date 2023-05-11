@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Office.Interop.Excel;
 using nc_attendance_app_api.Interface;
 using nc_attendance_app_api.Models;
@@ -25,11 +26,38 @@ namespace nc_attendance_app_api.Controllers
 
         // GET: api/<AttendanceController>
         [HttpGet]
-        public async Task<IActionResult> GetAllAttendance()
+        public async Task<IActionResult> GetAllAttendance([FromQuery(Name = "userId")] int? userId = null,[FromQuery(Name = "date")] DateTime? date = null,
+        [FromQuery(Name = "firstName")] string? firstName = null, [FromQuery(Name = "lastName")] string? lastName = null,
+        [FromQuery(Name = "fromDate")] DateTime? fromDate = null, [FromQuery(Name = "toDate")] DateTime? toDate = null)
         {
             try
             {
-                var attendance = await _attendanceBusinessLayer.GetAllAttendance();
+                IEnumerable<Attendance> attendance = await _attendanceBusinessLayer.GetAllAttendance();
+
+                if (userId.HasValue)
+                {
+                    attendance = attendance.Where(a => a.userId == userId.Value);
+                }
+
+                if (date.HasValue)
+                {
+                    attendance = attendance.Where(a => a.date == date.Value);
+                }
+
+                if (!firstName.IsNullOrEmpty())
+                {
+                    attendance = attendance.Where(a => a.firstName == firstName);
+                }
+
+                if (!lastName.IsNullOrEmpty())
+                {
+                    attendance = attendance.Where(a => a.lastName == lastName);
+                }
+                if(fromDate.HasValue && toDate.HasValue)
+                {
+                    attendance = attendance.Where(a => a.date >= fromDate && a.date <= toDate);
+                }
+
                 return Ok(attendance);
             }
             catch (Exception ex)
@@ -82,6 +110,8 @@ namespace nc_attendance_app_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
+
 
         [HttpGet("exportAttendance")]
         public async Task<FileStreamResult> ExportAttendance() 

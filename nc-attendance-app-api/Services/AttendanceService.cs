@@ -36,14 +36,15 @@ namespace nc_attendance_app_api.Services
                     while(await sqlDataReader.ReadAsync())
                     {
                         var attendance = new Attendance();
+
                         attendance.attendanceId = Convert.ToInt32(sqlDataReader["attendanceId"]);
                         attendance.userId = Convert.ToInt32(sqlDataReader["userId"]);
                         attendance.userName = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         attendance.firstName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         attendance.lastName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
                         attendance.date = sqlDataReader["date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["date"]);
-                        attendance.timeIn = sqlDataReader["timeIn"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["timeIn"]);
-                        attendance.timeOut = sqlDataReader["timeOut"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["timeOut"]);
+                        attendance.timeIn = Convert.ToString(sqlDataReader["timeIn"]) ?? "";
+                        attendance.timeOut = Convert.ToString(sqlDataReader["timeOut"]) ?? "";
                         attendance.totalHours = Convert.ToInt32(sqlDataReader["totalHours"]);
                         attendance.underTime = Convert.ToInt32(sqlDataReader["underTime"]);
                         attendance.overTime = Convert.ToInt32(sqlDataReader["overTime"]);
@@ -84,8 +85,8 @@ namespace nc_attendance_app_api.Services
                         attendance.firstName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         attendance.lastName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
                         attendance.date = sqlDataReader["date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["date"]);
-                        attendance.timeIn = sqlDataReader["timeIn"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["timeIn"]);
-                        attendance.timeOut = sqlDataReader["timeOut"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["timeOut"]);
+                        attendance.timeIn = Convert.ToString(sqlDataReader["timeIn"]) ?? "";
+                        attendance.timeOut = Convert.ToString(sqlDataReader["timeOut"]) ?? "";
                         attendance.totalHours = Convert.ToInt32(sqlDataReader["totalHours"]);
                         attendance.underTime = Convert.ToInt32(sqlDataReader["underTime"]);
                         attendance.overTime = Convert.ToInt32(sqlDataReader["overTime"]);

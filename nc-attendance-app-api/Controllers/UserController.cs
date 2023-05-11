@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using nc_attendance_app_api.Interface;
 using nc_attendance_app_api.Models;
 
@@ -19,11 +20,23 @@ namespace nc_attendance_app_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUserAsync()
+        public async Task<IActionResult> GetAllUserAsync([FromQuery(Name = "firstName")] string? firstName = null, 
+            [FromQuery(Name = "lastName")] string? lastName = null)
         {
             try
             {
-                var users = await _userBusinessLayer.GetAllUserAsync();
+                IEnumerable<User> users = await _userBusinessLayer.GetAllUserAsync();
+
+                if (!firstName.IsNullOrEmpty())
+                {
+                    users = users.Where(a => a.fName == firstName);
+                }
+
+                if (!lastName.IsNullOrEmpty())
+                {
+                    users = users.Where(a => a.lName == lastName);
+                }
+
                 return Ok(users);
             }
             catch (Exception ex)
