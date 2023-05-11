@@ -111,5 +111,17 @@ namespace nc_attendance_app_api.BusinessLayer
         {
             throw new NotImplementedException();
         }
+
+        public async Task UpdateOldPassword(string userName, string oldPassword, string newPassword)
+        {
+            byte[] byteNewPass = Encoding.UTF8.GetBytes(newPassword);
+            string base64StringNewPass = Convert.ToBase64String(byteNewPass);
+
+            byte[] byteOldPass = Encoding.UTF8.GetBytes(oldPassword);
+            string base64StringOldPass = Convert.ToBase64String(byteOldPass);
+
+            await _userService.UpdateOldPassword(userName, base64StringOldPass, base64StringNewPass);
+
+        }
     }
 }

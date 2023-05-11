@@ -12,7 +12,7 @@ namespace nc_attendance_app_api.Interface
         Task<User> GetUserLoginCredentials(string userName, string password);
         Task UpsertUserDetailsAsync(User user);
         Task DeleteUserByUsernameAsync(string username);
-
         Task<bool>IsMobileNumberValid(string  mobileNumber);
+        Task UpdateOldPassword(string userName, string oldPassword, string newPassword);
     }
 }

@@ -16,6 +16,7 @@ namespace nc_attendance_app_api.Services
         private const string SP_UPSERT_USER_DETAILS = "usp_UpsertUserDetails";
         private const string SP_DELETE_USER_DETAILS = "usp_DeleteUserByUserName";
         private const string SP_VALIDATE_MOBILE_NUMBER = "usp_ValidatePhoneNumber";
+        private const string SP_CHANGE_USER_PASSWORD = "usp_ChangeUserPassword";
         public UserService(IDataAccessService dataAccessService)
         {
             _dataAccessService = dataAccessService;
@@ -35,7 +36,6 @@ namespace nc_attendance_app_api.Services
                     {
                         var user = new User();
                         user.userNo = Convert.ToString(sqlDataReader["userNumber"]) ?? "";
-                        user.role = Convert.ToString(sqlDataReader["JobTitle"]) ?? "";
                         user.employmentCode = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
                         user.fName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         user.lName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
@@ -78,7 +78,6 @@ namespace nc_attendance_app_api.Services
                     while (await sqlDataReader.ReadAsync())
                     {
                         user.userNo = Convert.ToString(sqlDataReader["userNumber"]) ?? "";
-                        user.role = Convert.ToString(sqlDataReader["JobTitle"]) ?? "";
                         user.employmentCode = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
                         user.fName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         user.lName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
@@ -122,7 +121,6 @@ namespace nc_attendance_app_api.Services
                     while (await sqlDataReader.ReadAsync())
                     {
                         user.userNo = Convert.ToString(sqlDataReader["userNumber"]) ?? "";
-                        user.role = Convert.ToString(sqlDataReader["JobTitle"]) ?? "";
                         user.employmentCode = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
                         user.fName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         user.lName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
@@ -137,6 +135,7 @@ namespace nc_attendance_app_api.Services
                         user.createdAt = sqlDataReader["createdAt"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["createdAt"]);
 
                     }
+
                     return user;
                 }
             }
@@ -156,7 +155,6 @@ namespace nc_attendance_app_api.Services
             SqlParameter[] parameters = new SqlParameter[]
            {
                 new SqlParameter("@userNumber", user.userNo),
-                new SqlParameter("@role", user.role),
                 new SqlParameter("@employmentType", user.employmentCode),
                 new SqlParameter("@firstName", user.fName),
                 new SqlParameter("@lastName", user.lName),
@@ -202,5 +200,24 @@ namespace nc_attendance_app_api.Services
             return isValid;
 
         }
+
+        public async Task UpdateOldPassword(string userName, string oldPassword, string newPassword)
+        {
+       
+            if (await _dataAccessService.IsUserValid(userName, oldPassword))
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@userName", userName),
+                    new SqlParameter("@oldPassword", oldPassword),
+                    new SqlParameter("@newPassword", newPassword)
+                };
+
+                await _dataAccessService.ExecuteNonQueryAsync(SP_CHANGE_USER_PASSWORD, parameters);
+            }
+                   
+        }
+
+       
     }
 }

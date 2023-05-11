@@ -3,7 +3,6 @@
     public class User
     {
         public string userNo { get; set; }
-        public string role { get; set; }
         public string employmentCode { get; set; }
         public string fName { get; set; }
         public string lName { get; set; }

@@ -38,7 +38,9 @@ namespace nc_attendance_app_api.DAL
                 try
                 {
                     _sqlConnection.Open();
-                    return await command.ExecuteNonQueryAsync();
+                    var result = await command.ExecuteNonQueryAsync();
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
@@ -64,7 +66,9 @@ namespace nc_attendance_app_api.DAL
                 try
                 {
                     _sqlConnection.Open();
-                    return await command.ExecuteReaderAsync();
+                    var result = await command.ExecuteReaderAsync();
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
@@ -90,11 +94,31 @@ namespace nc_attendance_app_api.DAL
                 try
                 {
                     connection.Open();
-                    return command.ExecuteScalarAsync();
+                    var result = command.ExecuteScalarAsync();
+                    return result;
                 }
                 catch (Exception ex)
                 {
                     throw;
+                }
+            }
+        }
+
+        public async Task<bool> IsUserValid(string userName, string oldPassword)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT COUNT(*) FROM tbl_User WHERE userName = @userName AND Password = @oldPassword";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@userName", userName);
+                    command.Parameters.AddWithValue("@oldPassword", oldPassword);
+
+                    await connection.OpenAsync();
+                    int count = (int)await command.ExecuteScalarAsync();
+                    connection.Close();
+
+                    return count > 0;
                 }
             }
         }

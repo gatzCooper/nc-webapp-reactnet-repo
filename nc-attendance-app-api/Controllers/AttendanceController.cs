@@ -27,7 +27,7 @@ namespace nc_attendance_app_api.Controllers
         // GET: api/<AttendanceController>
         [HttpGet]
         public async Task<IActionResult> GetAllAttendance([FromQuery(Name = "userId")] int? userId = null,[FromQuery(Name = "date")] DateTime? date = null,
-        [FromQuery(Name = "firstName")] string? firstName = null, [FromQuery(Name = "lastName")] string? lastName = null,
+        [FromQuery(Name = "name")] string? name = null,
         [FromQuery(Name = "fromDate")] DateTime? fromDate = null, [FromQuery(Name = "toDate")] DateTime? toDate = null)
         {
             try
@@ -44,15 +44,11 @@ namespace nc_attendance_app_api.Controllers
                     attendance = attendance.Where(a => a.date == date.Value);
                 }
 
-                if (!firstName.IsNullOrEmpty())
+                if (!name.IsNullOrEmpty())
                 {
-                    attendance = attendance.Where(a => a.firstName == firstName);
+                    attendance = attendance.Where(a => a.firstName.Contains(name) || a.lastName.Contains(name));
                 }
 
-                if (!lastName.IsNullOrEmpty())
-                {
-                    attendance = attendance.Where(a => a.lastName == lastName);
-                }
                 if(fromDate.HasValue && toDate.HasValue)
                 {
                     attendance = attendance.Where(a => a.date >= fromDate && a.date <= toDate);

@@ -40,6 +40,7 @@ namespace nc_attendance_app_api.Services
                         attendance.attendanceId = Convert.ToInt32(sqlDataReader["attendanceId"]);
                         attendance.userId = Convert.ToInt32(sqlDataReader["userId"]);
                         attendance.userName = Convert.ToString(sqlDataReader["userName"]) ?? "";
+                        attendance.userNumber = Convert.ToString(sqlDataReader["userNo"]) ?? "";
                         attendance.firstName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         attendance.lastName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
                         attendance.date = sqlDataReader["date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["date"]);
@@ -82,6 +83,7 @@ namespace nc_attendance_app_api.Services
                         attendance.attendanceId = Convert.ToInt32(sqlDataReader["attendanceId"]);
                         attendance.userId = Convert.ToInt32(sqlDataReader["userId"]);
                         attendance.userName = Convert.ToString(sqlDataReader["userName"]) ?? "";
+                        attendance.userNumber = Convert.ToString(sqlDataReader["userNo"]) ?? "";
                         attendance.firstName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         attendance.lastName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
                         attendance.date = sqlDataReader["date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["date"]);

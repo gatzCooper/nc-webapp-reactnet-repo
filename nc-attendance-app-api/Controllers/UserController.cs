@@ -29,12 +29,12 @@ namespace nc_attendance_app_api.Controllers
 
                 if (!firstName.IsNullOrEmpty())
                 {
-                    users = users.Where(a => a.fName == firstName);
+                    users = users.Where(a => a.fName.Contains(firstName));
                 }
 
                 if (!lastName.IsNullOrEmpty())
                 {
-                    users = users.Where(a => a.lName == lastName);
+                    users = users.Where(a => a.lName.Contains(lastName));
                 }
 
                 return Ok(users);
@@ -89,10 +89,19 @@ namespace nc_attendance_app_api.Controllers
             }
         }
 
-        //[HttpPost("forgotPassword")]
-        //public async Task<IActionResult> ForgotPasswordAsync(string phoneNumber)
-        //{
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ChangeUserPass request)
+        {
+            try
+            {
+                await _userBusinessLayer.UpdateOldPassword(request.userName,request.oldPassword, request.newPassword);
 
-        //}
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
