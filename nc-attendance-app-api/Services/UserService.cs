@@ -162,7 +162,6 @@ namespace nc_attendance_app_api.Services
                 new SqlParameter("@contact", user.contact),
                 new SqlParameter("@email", user.email),
                 new SqlParameter("@userName", user.username),
-                new SqlParameter("@password", base64StringPass),
                 new SqlParameter("@status", user.status),
                 new SqlParameter("@department", user.departmentName),
                 new SqlParameter("@address", user.address),

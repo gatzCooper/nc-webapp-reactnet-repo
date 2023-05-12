@@ -60,7 +60,7 @@ namespace nc_attendance_app_api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpsertUserDetailsAsync([FromBody] User request)
+        public async Task<IActionResult> UpsertUserDetailsAsync([FromBody] UserRequest request)
         {
             try
             {
