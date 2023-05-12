@@ -154,7 +154,7 @@ namespace nc_attendance_app_api.Services
             SqlParameter[] parameters = new SqlParameter[]
            {
                 new SqlParameter("@userNumber", user.userNo),
-                new SqlParameter("@employmentType", user.employmentCode),
+                new SqlParameter("@employmentCode", user.employmentCode),
                 new SqlParameter("@firstName", user.fName),
                 new SqlParameter("@lastName", user.lName),
                 new SqlParameter("@middleName", user.mName),
