@@ -12,7 +12,7 @@
     "nc_attendance_app_api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:4717",
+      "applicationUrl": "http://localhost:4717/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
