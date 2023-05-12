@@ -121,11 +121,12 @@ namespace nc_attendance_app_api.BusinessLayer
             byte[] byteOldPass = Encoding.UTF8.GetBytes(oldPassword);
             string base64StringOldPass = Convert.ToBase64String(byteOldPass);
 
-            if (_userService.IsUserValid(userName, oldPassword))
-            {
-                await _userService.UpdateOldPassword(userName, base64StringOldPass, base64StringNewPass);
-            }
-            
+            await _userService.UpdateOldPassword(userName, base64StringOldPass, base64StringNewPass);         
+        }
+
+        public async Task<bool> IsUserValid(string userName, string oldPassword)
+        {
+            return await _userService.IsUserValid(userName, oldPassword);
         }
     }
 }

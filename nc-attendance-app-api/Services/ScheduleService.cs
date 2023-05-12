@@ -33,7 +33,6 @@ namespace nc_attendance_app_api.Services
                         sched.subjectCode = Convert.ToString(sqlDataReader["subjectCode"]) ?? "";
                         sched.userName = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         sched.workDay = Convert.ToString(sqlDataReader["workDay"]) ?? "";
-                        sched.workingHours = Convert.ToString(sqlDataReader["workingHours"]) ?? "";
                         sched.startTime = Convert.ToString(sqlDataReader["startTime"]) ?? "";
                         sched.endTime = Convert.ToString(sqlDataReader["endTime"]) ?? "";
 
@@ -69,7 +68,6 @@ namespace nc_attendance_app_api.Services
                         sched.subjectCode = Convert.ToString(sqlDataReader["subjectCode"]) ?? "";
                         sched.userName = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         sched.workDay = Convert.ToString(sqlDataReader["workDay"]) ?? "";
-                        sched.workingHours = Convert.ToString(sqlDataReader["workingHours"]) ?? "";
                         sched.startTime = Convert.ToString(sqlDataReader["startTime"]) ?? "";
                         sched.endTime = Convert.ToString(sqlDataReader["endTime"]) ?? "";
                         schedList.Add(sched);

@@ -200,30 +200,25 @@ namespace nc_attendance_app_api.Services
 
         }
 
-        public bool IsUserValid(string userName, string oldPassword)
+        public async Task<bool> IsUserValid(string userName, string oldPassword)
         {
-            byte[] bytePass = Encoding.UTF8.GetBytes(oldPassword);
-            string base64String = Convert.ToBase64String(bytePass);
 
-            return  _dataAccessService.IsUserValid(userName, base64String);
+            return await _dataAccessService.IsUserValid(userName, oldPassword);
 
         }
 
         public async Task UpdateOldPassword(string userName, string oldPassword, string newPassword)
         {
-       
-            if ( _dataAccessService.IsUserValid(userName, oldPassword))
-            {
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@userName", userName),
                     new SqlParameter("@oldPassword", oldPassword),
                     new SqlParameter("@newPassword", newPassword)
                 };
+      
 
-                await _dataAccessService.ExecuteNonQueryAsync(SP_CHANGE_USER_PASSWORD, parameters);
-            }
-                   
+                 await _dataAccessService.ExecuteNonQueryAsync(SP_CHANGE_USER_PASSWORD, parameters);
         }
 
        

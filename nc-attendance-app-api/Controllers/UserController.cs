@@ -110,9 +110,8 @@ namespace nc_attendance_app_api.Controllers
                 byte[] byteOldPass = Encoding.UTF8.GetBytes(request.oldPassword);
                 string base64String = Convert.ToBase64String(byteOldPass);
 
-                var user = await _userBusinessLayer.GetUserLoginCredentials(request.userName, request.oldPassword);
 
-                if (user.username == null && user.password == null)
+                if (!await _userBusinessLayer.IsUserValid(request.userName, base64String))
                 {
                     return Unauthorized("Access Denied");
                 }

@@ -8,6 +8,7 @@ namespace nc_attendance_app_api.Interface
         Task<User> GetUserByUsernameAsync(string userName);
 
         string GenerateJwtToken(int id, string userName);
+        Task<bool> IsUserValid(string userName, string oldPassword);
         Task<bool> ValidateUser(User user);
         Task<User> GetUserLoginCredentials(string userName, string password);
         Task UpsertUserDetailsAsync(User user);
