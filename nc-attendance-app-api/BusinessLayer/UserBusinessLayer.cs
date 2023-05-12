@@ -57,6 +57,7 @@ namespace nc_attendance_app_api.BusinessLayer
             byte[] passwordSalt;
 
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
             var user = await _userService.GetUserCredentialByUserNameAndPasswordAsync(userName, password);
 
             if (!VerifyPasswordHash(password, passwordHash, passwordSalt) && user.userNo == null)
@@ -120,8 +121,11 @@ namespace nc_attendance_app_api.BusinessLayer
             byte[] byteOldPass = Encoding.UTF8.GetBytes(oldPassword);
             string base64StringOldPass = Convert.ToBase64String(byteOldPass);
 
-            await _userService.UpdateOldPassword(userName, base64StringOldPass, base64StringNewPass);
-
+            if (_userService.IsUserValid(userName, oldPassword))
+            {
+                await _userService.UpdateOldPassword(userName, base64StringOldPass, base64StringNewPass);
+            }
+            
         }
     }
 }

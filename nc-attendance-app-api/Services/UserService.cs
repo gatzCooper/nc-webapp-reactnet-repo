@@ -46,6 +46,7 @@ namespace nc_attendance_app_api.Services
                         user.departmentName = Convert.ToString(sqlDataReader["departmentName"]) ?? "";
                         user.username = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         user.status = Convert.ToString(sqlDataReader["statusName"]) ?? "";
+                        user.employmentCode = Convert.ToString(sqlDataReader["@employmentCode"]) ?? "";
                         user.hiredDate = sqlDataReader["hiredDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["hiredDate"]);
                         user.createdAt = sqlDataReader["createdAt"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["createdAt"]);
 
@@ -88,6 +89,7 @@ namespace nc_attendance_app_api.Services
                         user.departmentName = Convert.ToString(sqlDataReader["departmentName"]) ?? "";
                         user.username = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         user.status = Convert.ToString(sqlDataReader["statusName"]) ?? "";
+                        user.employmentCode = Convert.ToString(sqlDataReader["@employmentCode"]) ?? "";
                         user.hiredDate = sqlDataReader["hiredDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["hiredDate"]);
                         user.createdAt = sqlDataReader["createdAt"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["createdAt"]);
 
@@ -197,10 +199,19 @@ namespace nc_attendance_app_api.Services
 
         }
 
+        public bool IsUserValid(string userName, string oldPassword)
+        {
+            byte[] bytePass = Encoding.UTF8.GetBytes(oldPassword);
+            string base64String = Convert.ToBase64String(bytePass);
+
+            return  _dataAccessService.IsUserValid(userName, base64String);
+
+        }
+
         public async Task UpdateOldPassword(string userName, string oldPassword, string newPassword)
         {
        
-            if (await _dataAccessService.IsUserValid(userName, oldPassword))
+            if ( _dataAccessService.IsUserValid(userName, oldPassword))
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {

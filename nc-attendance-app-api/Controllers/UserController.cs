@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using nc_attendance_app_api.Interface;
 using nc_attendance_app_api.Models;
+using System.Text;
 
 namespace nc_attendance_app_api.Controllers
 {
@@ -72,7 +73,8 @@ namespace nc_attendance_app_api.Controllers
                     departmentName = request.departmentName,
                     username = request.username,
                     status = request.status,
-                    hiredDate = request.hiredDate              
+                    hiredDate = request.hiredDate  
+                    
                  };
                 
                 await _userBusinessLayer.UpsertUserDetailsAsync(user);
@@ -101,10 +103,20 @@ namespace nc_attendance_app_api.Controllers
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ChangeUserPass request)
-        {
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangeUserPass request)
+            {
             try
             {
+                byte[] byteOldPass = Encoding.UTF8.GetBytes(request.oldPassword);
+                string base64String = Convert.ToBase64String(byteOldPass);
+
+                var user = await _userBusinessLayer.GetUserLoginCredentials(request.userName, request.oldPassword);
+
+                if (user.username == null && user.password == null)
+                {
+                    return Unauthorized("Access Denied");
+                }
+
                 await _userBusinessLayer.UpdateOldPassword(request.userName,request.oldPassword, request.newPassword);
 
                 return Ok();

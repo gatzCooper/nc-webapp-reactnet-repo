@@ -104,7 +104,7 @@ namespace nc_attendance_app_api.DAL
             }
         }
 
-        public async Task<bool> IsUserValid(string userName, string oldPassword)
+        public bool IsUserValid(string userName, string oldPassword)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -114,8 +114,8 @@ namespace nc_attendance_app_api.DAL
                     command.Parameters.AddWithValue("@userName", userName);
                     command.Parameters.AddWithValue("@oldPassword", oldPassword);
 
-                    await connection.OpenAsync();
-                    int count = (int)await command.ExecuteScalarAsync();
+                     connection.Open();
+                    int count = (int) command.ExecuteScalar();
                     connection.Close();
 
                     return count > 0;

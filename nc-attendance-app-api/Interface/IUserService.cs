@@ -13,5 +13,6 @@ namespace nc_attendance_app_api.Interface
         Task DeleteUserByUsernameAsync(string username);
         Task<bool> ValidateMobileNumberAsync(string mobileNumber);
         Task UpdateOldPassword(string userName, string oldPassword, string newPassword);
+        bool IsUserValid(string userName, string oldPassword);
     }
 }
