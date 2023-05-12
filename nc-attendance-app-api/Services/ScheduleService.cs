@@ -49,9 +49,9 @@ namespace nc_attendance_app_api.Services
             }
         }
 
-        public async Task<Schedule> GetScheduleByUsersAync(string username)
+        public async Task<IList<Schedule>> GetScheduleByUsersAync(string username)
         {
-            var sched = new Schedule();
+            var schedList = new List<Schedule> ();
 
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -64,6 +64,7 @@ namespace nc_attendance_app_api.Services
                 {
                     while (await sqlDataReader.ReadAsync())
                     {
+                        var sched = new Schedule();
                         sched.scheduleId = Convert.ToInt32(sqlDataReader["scheduleId"]);
                         sched.subjectCode = Convert.ToString(sqlDataReader["subjectCode"]) ?? "";
                         sched.userName = Convert.ToString(sqlDataReader["userName"]) ?? "";
@@ -71,9 +72,10 @@ namespace nc_attendance_app_api.Services
                         sched.workingHours = Convert.ToString(sqlDataReader["workingHours"]) ?? "";
                         sched.startTime = Convert.ToString(sqlDataReader["startTime"]) ?? "";
                         sched.endTime = Convert.ToString(sqlDataReader["endTime"]) ?? "";
+                        schedList.Add(sched);
 
                     }
-                    return sched;
+                    return schedList;
                 }
             }
             catch (Exception err)

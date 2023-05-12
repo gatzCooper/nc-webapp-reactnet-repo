@@ -20,22 +20,17 @@ namespace nc_attendance_app_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUserAsync([FromQuery(Name = "firstName")] string? firstName = null, 
-            [FromQuery(Name = "lastName")] string? lastName = null)
+        public async Task<IActionResult> GetAllUserAsync([FromQuery(Name = "name")] string? name = null)
         {
             try
             {
                 IEnumerable<User> users = await _userBusinessLayer.GetAllUserAsync();
 
-                if (!firstName.IsNullOrEmpty())
+                if (!name.IsNullOrEmpty())
                 {
-                    users = users.Where(a => a.fName.Contains(firstName));
+                    users = users.Where(a => a.fName.Contains(name) || a.lName.Contains(name));
                 }
 
-                if (!lastName.IsNullOrEmpty())
-                {
-                    users = users.Where(a => a.lName.Contains(lastName));
-                }
 
                 return Ok(users);
             }

@@ -148,9 +148,6 @@ namespace nc_attendance_app_api.Services
 
         public async Task UpsertUserDetailsAsync(User user)
         {
-            byte[] bytePass = Encoding.UTF8.GetBytes(user.password);
-            string base64StringPass = Convert.ToBase64String(bytePass);
-
 
             SqlParameter[] parameters = new SqlParameter[]
            {

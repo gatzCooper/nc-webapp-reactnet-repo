@@ -17,7 +17,7 @@ namespace nc_attendance_app_api.BusinessLayer
             return schedules;
         }
 
-        public async Task<Schedule> GetScheduleByUsersAync(string username)
+        public async Task<IList<Schedule>> GetScheduleByUsersAync(string username)
         {
             var sched = await _scheduleService.GetScheduleByUsersAync(username);
 
