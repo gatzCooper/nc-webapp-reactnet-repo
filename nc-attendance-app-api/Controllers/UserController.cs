@@ -64,7 +64,23 @@ namespace nc_attendance_app_api.Controllers
         {
             try
             {
-                await _userBusinessLayer.UpsertUserDetailsAsync(request);
+                var user = new User()
+                {
+                    userNo = request.userNo,
+                    employmentCode = request.employmentCode,
+                    fName = request.fName,
+                    lName = request.lName,
+                    mName = request.mName,
+                    email = request.email,
+                    contact = request.contact,
+                    address = request.address,
+                    departmentName = request.departmentName,
+                    username = request.username,
+                    status = request.status,
+                    hiredDate = request.hiredDate              
+                 };
+                
+                await _userBusinessLayer.UpsertUserDetailsAsync(user);
 
                 return Ok();
             }
