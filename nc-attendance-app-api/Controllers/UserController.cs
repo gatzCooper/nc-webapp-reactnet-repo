@@ -41,7 +41,7 @@ namespace nc_attendance_app_api.Controllers
             }
         }
 
-        [HttpGet("{username}")]
+        [HttpGet("{userName}")]
         public async Task<IActionResult> GetUserByUsernameAsync(string userName)
         {
             try
@@ -87,12 +87,12 @@ namespace nc_attendance_app_api.Controllers
             }
         }
 
-        [HttpDelete("username")]
-        public async Task<IActionResult> DeleteUserDetailsByUserNameAsync(string username)
+        [HttpDelete("{userName}")]
+        public async Task<IActionResult> DeleteUserDetailsByUserNameAsync(string userName)
         {
             try
             {
-                await _userBusinessLayer.DeleteUserByUsernameAsync(username);
+                await _userBusinessLayer.DeleteUserByUsernameAsync(userName);
 
                 return Ok();
             }

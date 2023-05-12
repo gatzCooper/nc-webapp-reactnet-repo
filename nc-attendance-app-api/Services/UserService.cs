@@ -88,7 +88,6 @@ namespace nc_attendance_app_api.Services
                         user.departmentName = Convert.ToString(sqlDataReader["departmentName"]) ?? "";
                         user.username = Convert.ToString(sqlDataReader["userName"]) ?? "";
                         user.status = Convert.ToString(sqlDataReader["statusName"]) ?? "";
-                        user.employmentCode = Convert.ToString(sqlDataReader["@employmentCode"]) ?? "";
                         user.hiredDate = sqlDataReader["hiredDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["hiredDate"]);
                         user.createdAt = sqlDataReader["createdAt"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(sqlDataReader["createdAt"]);
 
