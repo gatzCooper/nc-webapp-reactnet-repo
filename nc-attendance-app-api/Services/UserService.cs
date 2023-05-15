@@ -124,6 +124,7 @@ namespace nc_attendance_app_api.Services
                     {
                         user.userNo = Convert.ToString(sqlDataReader["userNumber"]) ?? "";
                         user.employmentCode = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
+                        user.empDescription = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
                         user.empDescription = Convert.ToString(sqlDataReader["empDescription"]) ?? "";
                         user.fName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                         user.lName = Convert.ToString(sqlDataReader["lastName"]) ?? "";
