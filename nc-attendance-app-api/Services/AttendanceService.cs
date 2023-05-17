@@ -50,6 +50,7 @@ namespace nc_attendance_app_api.Services
                         attendance.underTime = Convert.ToInt32(sqlDataReader["underTime"]);
                         attendance.overTime = Convert.ToInt32(sqlDataReader["overTime"]);
                         attendance.employmentType = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
+                        attendance.late = Convert.ToInt32(sqlDataReader["late"]);
 
                         attendanceList.Add(attendance);
                     }
@@ -91,9 +92,10 @@ namespace nc_attendance_app_api.Services
                         attendance.timeIn = Convert.ToString(sqlDataReader["timeIn"]) ?? "";
                         attendance.timeOut = Convert.ToString(sqlDataReader["timeOut"]) ?? "";
                         attendance.totalHours = Convert.ToInt32(sqlDataReader["totalHours"]);
-                        attendance.underTime = Convert.ToInt32(sqlDataReader["underTime"]);
-                        attendance.overTime = Convert.ToInt32(sqlDataReader["overTime"]);
+                        attendance.underTime = Convert.ToDecimal(sqlDataReader["underTime"]);
+                        attendance.overTime = Convert.ToDecimal(sqlDataReader["overTime"]);
                         attendance.employmentType = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
+                        attendance.late = Convert.ToInt32(sqlDataReader["late"]);
                     }
 
                     return attendance;

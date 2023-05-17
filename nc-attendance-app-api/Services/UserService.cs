@@ -17,6 +17,7 @@ namespace nc_attendance_app_api.Services
         private const string SP_DELETE_USER_DETAILS = "usp_DeleteUserByUserName";
         private const string SP_VALIDATE_MOBILE_NUMBER = "usp_ValidatePhoneNumber";
         private const string SP_CHANGE_USER_PASSWORD = "usp_ChangeUserPassword";
+        private const string SP_RETRIEVE_PASSWORD = "usp_RetrievePassword";
         public UserService(IDataAccessService dataAccessService)
         {
             _dataAccessService = dataAccessService;
@@ -222,6 +223,24 @@ namespace nc_attendance_app_api.Services
                  await _dataAccessService.ExecuteNonQueryAsync(SP_CHANGE_USER_PASSWORD, parameters);
         }
 
-       
+        public async Task<UserRetrieve> RetrievePasswordAsync(string userName)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+              {
+                    new SqlParameter("@userName", userName)
+              };
+            var user = new UserRetrieve();
+
+            using (SqlDataReader sqlDataReader = (SqlDataReader)await _dataAccessService.ExecuteReaderAsync(SP_RETRIEVE_PASSWORD, parameters))
+            {
+                while (await sqlDataReader.ReadAsync())
+                {
+                    user.email = Convert.ToString(sqlDataReader["emailAddress"]) ?? "";
+                    user.password = Convert.ToString(sqlDataReader["password"]) ?? "";
+
+                }
+                return user;
+            }
+        }
     }
 }

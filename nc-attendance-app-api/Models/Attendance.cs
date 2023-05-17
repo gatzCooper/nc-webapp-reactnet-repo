@@ -13,7 +13,8 @@
         public string timeIn { get; set; }
         public string timeOut { get; set; }
         public int? totalHours { get; set; }
-        public int? underTime { get; set; }
-        public int? overTime { get; set; }
+        public decimal? underTime { get; set; }
+        public decimal? overTime { get; set; }
+        public int? late { get; set; }
     }
 }

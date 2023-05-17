@@ -125,5 +125,20 @@ namespace nc_attendance_app_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] string username)
+        {
+            try
+            {
+                await _userBusinessLayer.SendEmailToUser(username);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

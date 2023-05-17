@@ -2,6 +2,8 @@
 using nc_attendance_app_api.Interface;
 using nc_attendance_app_api.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -127,6 +129,56 @@ namespace nc_attendance_app_api.BusinessLayer
         public async Task<bool> IsUserValid(string userName, string oldPassword)
         {
             return await _userService.IsUserValid(userName, oldPassword);
+        }
+
+       
+        public async Task SendEmailToUser(string userName)
+        {
+            try
+             {
+                var userDetails = await RetievePassword(userName);
+
+              
+                // Set up the SMTP client for Gmail
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
+                smtpClient.Port = 587;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential("user.ncsmtp@gmail.com", "NCAdmin2023");
+                smtpClient.EnableSsl = true;
+
+                // Create the email message
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress(userDetails.email);
+                mailMessage.To.Add(userDetails.email);
+                mailMessage.Subject = "Retrieve password";
+                mailMessage.Body = $"Hi good day!, here is your password: {userDetails.password}. Please change password as soon as possible.Thanks! \n -Admin \n" +
+                    $"This is system generated please do not reply.";
+
+                // Send the email
+                smtpClient.Send(mailMessage);
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }     
+
+        }
+        private async Task<UserRetrieve> RetievePassword(string userName)
+        {
+            var user = await _userService.RetrievePasswordAsync(userName);
+
+            string base64Pass = user.password;
+             byte[] bytes = Convert.FromBase64String(base64Pass);
+
+            string stringPass = Encoding.UTF8.GetString(bytes);
+
+            var userDetails = new UserRetrieve()
+            {
+                email = user.email,
+                password = stringPass
+            };
+
+            return userDetails;
         }
     }
 }
