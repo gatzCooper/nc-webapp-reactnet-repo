@@ -67,7 +67,7 @@ namespace nc_attendance_app_api.Services
 
         }
 
-        public async Task<Attendance> GetAttendancePerUser(string userName)
+        public async Task<List<Attendance>> GetAttendancePerUser(string userName)
         {
 
             SqlParameter[] parameters = new SqlParameter[]
@@ -77,13 +77,13 @@ namespace nc_attendance_app_api.Services
 
             try
             {
-                var attendance = new Attendance();
+                var attendanceList = new List<Attendance>();
 
                 using (SqlDataReader sqlDataReader = (SqlDataReader)await _dataAccessService.ExecuteReaderAsync(SP_GET_ALL_ATTENDANCE_BY_USERNAME,parameters))
                 {
                     while (await sqlDataReader.ReadAsync())
                     {
-                        
+                        var attendance = new Attendance();
                         attendance.attendanceId = Convert.ToInt32(sqlDataReader["attendanceId"]);
                         attendance.userId = Convert.ToInt32(sqlDataReader["userId"]);
                         attendance.userName = Convert.ToString(sqlDataReader["userName"]) ?? "";
@@ -100,9 +100,10 @@ namespace nc_attendance_app_api.Services
                         attendance.empDescription = Convert.ToString(sqlDataReader["empDescription"]) ?? "";
                         attendance.late = Convert.ToInt32(sqlDataReader["late"]);
                         attendance.minute = Convert.ToInt32(sqlDataReader["minute"]);
+                        attendanceList.Add(attendance);
                     }
 
-                    return attendance;
+                    return attendanceList;
                 }
             }
             catch (Exception err)

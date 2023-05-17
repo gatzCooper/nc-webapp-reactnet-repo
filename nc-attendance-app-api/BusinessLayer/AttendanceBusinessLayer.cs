@@ -25,7 +25,7 @@ namespace nc_attendance_app_api.BusinessLayer
             return attendance;
         }
 
-        public async Task<Attendance> GetAttendancePerUser(string userName)
+        public async Task<List<Attendance>> GetAttendancePerUser(string userName)
         {
             var attendance = await _attendanceService.GetAttendancePerUser(userName);
 
