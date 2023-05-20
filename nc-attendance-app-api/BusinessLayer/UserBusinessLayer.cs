@@ -180,5 +180,10 @@ namespace nc_attendance_app_api.BusinessLayer
 
             return userDetails;
         }
+
+        public async Task BulkUserUpload(User user)
+        {
+            await _userService.BulkUserUpload(user);
+        }
     }
 }

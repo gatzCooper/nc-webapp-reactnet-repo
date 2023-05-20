@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CsvHelper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using nc_attendance_app_api.Interface;
 using nc_attendance_app_api.Models;
+using System.Formats.Asn1;
+using System.Globalization;
+using System.Net;
 using System.Text;
+using System.Web.Http.Description;
 
 namespace nc_attendance_app_api.Controllers
 {
@@ -139,6 +144,51 @@ namespace nc_attendance_app_api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("BulkUploadUser")]
+        public async Task<IActionResult> BulkUploadUser(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("Template file is missing.");
+            }
+            try
+            {
+                using (var stream = new StreamReader(file.OpenReadStream()))
+                using (var csv = new CsvReader(stream, CultureInfo.InvariantCulture))
+                {
+                    var records = csv.GetRecords<UserRequest>().ToList();
+                    foreach (var record in records)
+                    {
+                        var user = new User
+                        {
+                            userNo = record.userNo,
+                            employmentCode = record.employmentCode,
+                            fName = record.fName,
+                            mName = record.mName,
+                            lName = record.lName,
+                            contact = record.contact,
+                            email = record.email,
+                            username = record.username,
+                            status = record.status,
+                            departmentName = record.departmentName,
+                            address = record.address,
+                            hiredDate = record.hiredDate
+                        };
+                        
+                       await _userBusinessLayer.BulkUserUpload(user);
+                    }
+                    return Ok("Template uploaded and data inserted successfully.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
         }
     }
 }

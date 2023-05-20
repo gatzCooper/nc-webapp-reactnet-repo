@@ -1,4 +1,5 @@
 ﻿using nc_attendance_app_api.Interface;
+using nc_attendance_app_api.Models;
 using nc_attendance_app_api.Utilities;
 using System.Data;
 using System.Data.SqlClient;
@@ -37,7 +38,7 @@ namespace nc_attendance_app_api.DAL
 
                 try
                 {
-                    _sqlConnection.Open();
+                    await _sqlConnection.OpenAsync();
                     var result = await command.ExecuteNonQueryAsync();
 
                     return result;
@@ -65,7 +66,7 @@ namespace nc_attendance_app_api.DAL
 
                 try
                 {
-                    _sqlConnection.Open();
+                    await _sqlConnection.OpenAsync();
                     var result = await command.ExecuteReaderAsync();
 
                     return result;
@@ -77,7 +78,7 @@ namespace nc_attendance_app_api.DAL
             }
         }
 
-        public Task<object?> ExecuteScalarAsync(string query, IEnumerable<SqlParameter>? parameters = null)
+        public async Task<object?> ExecuteScalarAsync(string query, IEnumerable<SqlParameter>? parameters = null)
         {
             using (var connection = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(query, connection))
@@ -93,8 +94,8 @@ namespace nc_attendance_app_api.DAL
 
                 try
                 {
-                    connection.Open();
-                    var result = command.ExecuteScalarAsync();
+                    await _sqlConnection.OpenAsync();
+                    var result = await command.ExecuteScalarAsync();
                     return result;
                 }
                 catch (Exception ex)
@@ -103,6 +104,7 @@ namespace nc_attendance_app_api.DAL
                 }
             }
         }
+            
 
         public async Task<bool> IsUserValid(string userName, string oldPassword)
         {
@@ -121,6 +123,37 @@ namespace nc_attendance_app_api.DAL
 
                     return count > 0;
                 }
+            }
+        }
+
+        public async Task BulkUserUpload(User user)
+        {
+
+            // Save the records to the database
+            using (var connection = new SqlConnection(_connectionString)) // Replace with your database connection string
+            {
+                await connection.OpenAsync();
+
+                    using (var command = new SqlCommand("dbo.usp_UpsertUserDetails", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        command.Parameters.AddWithValue("@userNumber", user.userNo);
+                        command.Parameters.AddWithValue("@employmentCode", user.employmentCode);
+                        command.Parameters.AddWithValue("@firstName", user.fName);
+                        command.Parameters.AddWithValue("@lastName", user.lName);
+                        command.Parameters.AddWithValue("@middleName", user.mName);
+                        command.Parameters.AddWithValue("@contact", user.contact);
+                        command.Parameters.AddWithValue("@email", user.email);
+                        command.Parameters.AddWithValue("@userName", user.username);
+                        command.Parameters.AddWithValue("@status", user.status);
+                        command.Parameters.AddWithValue("@department", user.departmentName);
+                        command.Parameters.AddWithValue("@address", user.address);
+                        command.Parameters.AddWithValue("@hiredDate", user.hiredDate ?? (object)DBNull.Value);
+
+                        await command.ExecuteNonQueryAsync();
+                    }
+                
             }
         }
     }

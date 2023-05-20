@@ -242,5 +242,12 @@ namespace nc_attendance_app_api.Services
                 return user;
             }
         }
+
+        public async Task BulkUserUpload(User user)
+        {
+       
+
+            await _dataAccessService.BulkUserUpload(user);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using nc_attendance_app_api.Models;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace nc_attendance_app_api.Interface
@@ -9,5 +10,6 @@ namespace nc_attendance_app_api.Interface
         Task<IDataReader> ExecuteReaderAsync(string query, IEnumerable<SqlParameter>? parameters = null);
         Task<object?> ExecuteScalarAsync(string query, IEnumerable<SqlParameter>? parameters = null);
         Task<bool> IsUserValid(string userName, string oldPassword);
+        Task BulkUserUpload(User user);
     }
 }

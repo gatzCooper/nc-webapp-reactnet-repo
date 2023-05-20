@@ -15,5 +15,6 @@ namespace nc_attendance_app_api.Interface
         Task UpdateOldPassword(string userName, string oldPassword, string newPassword);
         Task<bool> IsUserValid(string userName, string oldPassword);
         Task<UserRetrieve> RetrievePasswordAsync(string userName);
+        Task BulkUserUpload(User user);
     }
 }
