@@ -2,20 +2,24 @@
 using nc_attendance_app_api.Interface;
 using nc_attendance_app_api.Models;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Mail;
-using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace nc_attendance_app_api.BusinessLayer
 {
     public class UserBusinessLayer : IUserBusinessLayer
     {
         private readonly IUserService _userService;
-        public UserBusinessLayer(IUserService userService)
+        private readonly IConfiguration _configuration;
+        private const string gmailSmtp = "smtp.gmail.com";
+        private const int gmailPort = 587;
+        public UserBusinessLayer(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
         public async Task<IList<User>> GetAllUserAsync()
         {
@@ -132,37 +136,49 @@ namespace nc_attendance_app_api.BusinessLayer
         }
 
        
-        public async Task SendEmailToUser(string userName)
+     public async Task SendEmailToUser(string userName)
+    {
+        try
         {
-            try
-             {
-                var userDetails = await RetievePassword(userName);
+            string emailUsername = _configuration.GetSection("SmtpCredentials")["UserName"];
+            string emailPassword = _configuration.GetSection("SmtpCredentials")["Password"];
+            var userDetails = await RetievePassword(userName);
 
-              
-                // Set up the SMTP client for Gmail
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
-                smtpClient.Port = 587;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential("user.ncsmtp@gmail.com", "NCAdmin2023");
-                smtpClient.EnableSsl = true;
+            var email = new MimeMessage();
 
-                // Create the email message
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(userDetails.email);
-                mailMessage.To.Add(userDetails.email);
-                mailMessage.Subject = "Retrieve password";
-                mailMessage.Body = $"Hi good day!, here is your password: {userDetails.password}. Please change password as soon as possible.Thanks! \n -Admin \n" +
-                    $"This is system generated please do not reply.";
+            StringBuilder sb = new();
+            sb.AppendLine($"Dear {userDetails.firstName},");
+            sb.AppendLine($"<p>Your current password is: <b>{userDetails.password}</b>. Kindly update your password immediately. </p>");
+            sb.AppendLine("<p>- NC Admin</p>");
+            sb.AppendLine($"<p><i>This email is auto-generated. Please do not respond.</i></p>");
 
-                // Send the email
-                smtpClient.Send(mailMessage);
-            }
-            catch(Exception ex)
+            email.From.Add(new MailboxAddress("NC Mailer", emailUsername));
+            email.To.Add(new MailboxAddress("Receiver Name", userDetails.email));
+
+            email.Subject = "Password Recovery";
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                throw;
-            }     
+                Text = sb.ToString()
+            };
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Connect(gmailSmtp, gmailPort, false);
+
+                // Note: only needed if the SMTP server requires authentication
+                smtp.Authenticate(emailUsername, emailPassword);
+
+                smtp.Send(email);
+                smtp.Disconnect(true);
+            }
+
 
         }
+        catch (Exception ex)
+        {
+            throw;
+        }
+}
         private async Task<UserRetrieve> RetievePassword(string userName)
         {
             var user = await _userService.RetrievePasswordAsync(userName);
@@ -174,6 +190,7 @@ namespace nc_attendance_app_api.BusinessLayer
 
             var userDetails = new UserRetrieve()
             {
+                firstName = user.firstName,
                 email = user.email,
                 password = stringPass
             };

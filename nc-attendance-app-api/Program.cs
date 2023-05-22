@@ -14,6 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 
+
+// Configuration
+var configurationBuilder = new ConfigurationBuilder()
+          .SetBasePath(Directory.GetCurrentDirectory())
+          .AddJsonFile("appsettings.json");
+
+var configuration = configurationBuilder.Build();
+//services.AddSingleton<IConfiguration>(configuration);
+
 services.AddLogging();
 
 builder.Services
@@ -56,12 +65,6 @@ builder.Services.AddCors(options =>
 
 
 
-// Configuration
-var configurationBuilder = new ConfigurationBuilder()
-          .SetBasePath(Directory.GetCurrentDirectory())
-          .AddJsonFile("appsettings.json");
-
-var configuration = configurationBuilder.Build();
 
 var app = builder.Build();
 

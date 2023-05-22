@@ -15,7 +15,7 @@ namespace nc_attendance_app_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDashboarCountsAsync()
+        public async Task<IActionResult> GetDashboardCountsAsync()
         {
             try
             {

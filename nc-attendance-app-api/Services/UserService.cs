@@ -235,8 +235,10 @@ namespace nc_attendance_app_api.Services
             {
                 while (await sqlDataReader.ReadAsync())
                 {
+                    user.firstName = Convert.ToString(sqlDataReader["firstName"]) ?? "";
                     user.email = Convert.ToString(sqlDataReader["emailAddress"]) ?? "";
                     user.password = Convert.ToString(sqlDataReader["password"]) ?? "";
+                   
 
                 }
                 return user;
