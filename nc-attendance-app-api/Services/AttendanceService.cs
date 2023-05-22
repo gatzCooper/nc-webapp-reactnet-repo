@@ -47,12 +47,12 @@ namespace nc_attendance_app_api.Services
                         attendance.timeIn = Convert.ToString(sqlDataReader["timeIn"]) ?? "";
                         attendance.timeOut = Convert.ToString(sqlDataReader["timeOut"]) ?? "";
                         attendance.totalHours = Convert.ToInt32(sqlDataReader["totalHours"]);
-                        attendance.underTime = Convert.ToInt32(sqlDataReader["underTime"]);
+                        attendance.underTime = Convert.ToString(sqlDataReader["underTime"]) ?? "";
                         attendance.overTime = Convert.ToInt32(sqlDataReader["overTime"]);
                         attendance.employmentType = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
                         attendance.empDescription = Convert.ToString(sqlDataReader["empDescription"]) ?? "";
                         attendance.late = Convert.ToInt32(sqlDataReader["late"]);
-                        attendance.minute = Convert.ToInt32(sqlDataReader["minute"]);
+                        attendance.minute = Convert.ToString(sqlDataReader["minute"]) ?? "";
 
                         attendanceList.Add(attendance);
                     }
@@ -94,12 +94,12 @@ namespace nc_attendance_app_api.Services
                         attendance.timeIn = Convert.ToString(sqlDataReader["timeIn"]) ?? "";
                         attendance.timeOut = Convert.ToString(sqlDataReader["timeOut"]) ?? "";
                         attendance.totalHours = Convert.ToInt32(sqlDataReader["totalHours"]);
-                        attendance.underTime = Convert.ToDecimal(sqlDataReader["underTime"]);
+                        attendance.underTime = Convert.ToString(sqlDataReader["underTime"]) ?? "";
                         attendance.overTime = Convert.ToDecimal(sqlDataReader["overTime"]);
                         attendance.employmentType = Convert.ToString(sqlDataReader["employmentCode"]) ?? "";
                         attendance.empDescription = Convert.ToString(sqlDataReader["empDescription"]) ?? "";
                         attendance.late = Convert.ToInt32(sqlDataReader["late"]);
-                        attendance.minute = Convert.ToInt32(sqlDataReader["minute"]);
+                        attendance.minute = Convert.ToString(sqlDataReader["minute"]) ?? "";
                         attendanceList.Add(attendance);
                     }
 

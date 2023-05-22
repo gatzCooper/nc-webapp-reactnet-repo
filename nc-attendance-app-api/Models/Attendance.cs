@@ -1,4 +1,6 @@
-﻿namespace nc_attendance_app_api.Models
+﻿using Microsoft.IdentityModel.Tokens;
+
+namespace nc_attendance_app_api.Models
 {
     public class Attendance
     {
@@ -14,19 +16,19 @@
         public string timeIn { get; set; }
         public string timeOut { get; set; }
         public int? totalHours { get; set; }
-        public decimal? underTime { get; set; }
+        public string? underTime { get; set; }
         public decimal? overTime { get; set; }
         public int? late { get; set; }
-        public int? minute { get; set; }
+        public string? minute { get; set; }
         public string totalHoursTimeFormat
         {
             get
             {
-                if (totalHours.HasValue && minute.HasValue)
+                if (totalHours.HasValue && !minute.IsNullOrEmpty())
                     return $"{totalHours}:{minute}";
                 else if (totalHours.HasValue)
                     return totalHours.ToString();
-                else if (minute.HasValue)
+                else if (!minute.IsNullOrEmpty())
                     return minute.ToString();
                 else
                     return string.Empty;
