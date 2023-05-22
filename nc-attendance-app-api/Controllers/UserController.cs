@@ -33,7 +33,8 @@ namespace nc_attendance_app_api.Controllers
 
                 if (!name.IsNullOrEmpty())
                 {
-                    users = users.Where(a => a.fName.Contains(name) || a.lName.Contains(name));
+                    users = users.Where(a => a.fName.Contains(name, StringComparison.OrdinalIgnoreCase) ||
+                                             a.lName.Contains(name, StringComparison.OrdinalIgnoreCase));
                 }
 
 
